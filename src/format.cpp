@@ -16,6 +16,7 @@ string Format::ElapsedTime(long s) {
   auto h = duration_cast<hours>(sec);
   auto m = duration_cast<minutes>(sec - h);
   auto rs = duration_cast<seconds>(sec - (h + m));
-  return to_string(h.count()) + ":" + to_string(m.count()) + ":" +
-         to_string(rs.count());
+  char buffer[9];
+  sprintf(buffer, "%02li:%02li:%02li", h.count(), m.count(), rs.count());
+  return std::string(buffer);
 }
