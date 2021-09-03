@@ -1,11 +1,13 @@
+#include "ncurses_display.h"
+
 #include <curses.h>
+
 #include <chrono>
 #include <string>
 #include <thread>
 #include <vector>
 
 #include "format.h"
-#include "ncurses_display.h"
 #include "system.h"
 
 using std::string;
@@ -46,7 +48,7 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
             ("Total Processes: " + to_string(system.TotalProcesses())).c_str());
   mvwprintw(
       window, ++row, 2,
-      ("Ninja Running Processes: " + to_string(system.RunningProcesses())).c_str());
+      ("Running Processes: " + to_string(system.RunningProcesses())).c_str());
   mvwprintw(window, ++row, 2,
             ("Up Time: " + Format::ElapsedTime(system.UpTime())).c_str());
   wrefresh(window);
