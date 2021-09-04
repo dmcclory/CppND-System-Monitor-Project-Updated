@@ -1,6 +1,5 @@
 #ifndef PROCESS_H
 #define PROCESS_H
-
 #include <string>
 /*
 Basic class for Process representation
@@ -20,6 +19,7 @@ class Process {
   // TODO: Declare any necessary private members
  private:
   int pid;
+  std::string username;
 };
 
 #endif
