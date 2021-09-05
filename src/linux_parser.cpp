@@ -7,6 +7,7 @@
 #include <vector>
 
 using std::stof;
+using std::stoi;
 using std::string;
 using std::to_string;
 using std::vector;
@@ -153,9 +154,16 @@ int LinuxParser::RunningProcesses() {
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Command(int pid [[maybe_unused]]) { return string(); }
 
-// TODO: Read and return the memory used by a process
+// [X] TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Ram(int pid [[maybe_unused]]) { return string(); }
+string LinuxParser::Ram(int pid) {
+  string res = LinuxParser::ExtractKeyFromProcFile(
+      kProcDirectory + to_string(pid) + kStatusFilename, "VmSize:");
+  if (res == "N/A") {
+    return "0";
+  }
+  return to_string(stoi(res) / 1000);
+}
 
 // [X] TODO: Read and return the user ID associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
