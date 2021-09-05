@@ -17,7 +17,7 @@ using std::vector;
 int Process::Pid() { return pid; }
 
 // [X] TODO: Return this process's CPU utilization
-float Process::CpuUtilization() {
+float Process::CpuUtilization() const {
   string line;
   std::ifstream filestream(LinuxParser::kProcDirectory + to_string(pid) +
                            LinuxParser::kStatFilename);
@@ -55,9 +55,8 @@ string Process::User() {
 // [X] TODO: Return the age of this process (in seconds)
 long int Process::UpTime() { return LinuxParser::UpTime(pid); }
 
-// TODO: Overload the "less than" comparison operator for Process objects
+// [X] TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a [[maybe_unused]]) const {
-  // return a.CpuUtilization() > this->CpuUtilization();
-  return true;
+  return a.CpuUtilization() > CpuUtilization();
 }
