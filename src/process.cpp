@@ -16,8 +16,26 @@ using std::vector;
 // [X] TODO: Return this process's ID
 int Process::Pid() { return pid; }
 
-// TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { return 0; }
+// [X] TODO: Return this process's CPU utilization
+float Process::CpuUtilization() {
+  string line;
+  std::ifstream filestream(LinuxParser::kProcDirectory + to_string(pid) +
+                           LinuxParser::kStatFilename);
+
+  if (filestream.is_open()) {
+    std::getline(filestream, line);
+    vector<string> data = LinuxParser::SplitOnSpace(line);
+    float utime = stof(data[13]);
+    float stime = stof(data[14]);
+    float cutime = stof(data[15]);
+    float cstime = stof(data[16]);
+    float total_time = utime + stime + cutime + cstime;
+
+    return ((total_time / sysconf(_SC_CLK_TCK)) / LinuxParser::UpTime(pid));
+  }
+
+  return 0.0;
+}
 
 // [X] TODO: Return the command that generated this process
 string Process::Command() { return LinuxParser::Command(pid); }
@@ -40,5 +58,6 @@ long int Process::UpTime() { return LinuxParser::UpTime(pid); }
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a [[maybe_unused]]) const {
+  // return a.CpuUtilization() > this->CpuUtilization();
   return true;
 }
