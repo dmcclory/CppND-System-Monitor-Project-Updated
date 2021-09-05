@@ -27,7 +27,7 @@ int RunningProcesses();
 std::string OperatingSystem();
 std::string Kernel();
 std::string ExtractKeyFromProcFile(std::string path, std::string key);
-
+std::vector<std::string> SplitOnSpace(std::string text);
 // CPU
 enum CPUStates {
   kUser_ = 0,

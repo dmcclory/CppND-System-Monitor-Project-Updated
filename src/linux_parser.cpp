@@ -52,6 +52,16 @@ string LinuxParser::ExtractKeyFromProcFile(string path, string key) {
   return "N/A";
 }
 
+vector<string> LinuxParser::SplitOnSpace(string text) {
+  vector<string> result = {};
+  std::istringstream linestream(text);
+  string entry;
+  while (linestream >> entry) {
+    result.push_back(entry);
+  };
+  return result;
+}
+
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::Kernel() {
   string os, version, kernel;
@@ -173,6 +183,21 @@ string LinuxParser::User(int pid) {
   return string();
 }
 
-// TODO: Read and return the uptime of a process
+// [X] TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid [[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid) {
+  string line;
+  vector<string> data;
+  std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
+
+  if (filestream.is_open()) {
+    std::getline(filestream, line);
+    data = LinuxParser::SplitOnSpace(line);
+    long int procRawUpTime = std::stol(data[21]);
+    // learned about this sysconf denominator via this forum thread:
+    // https://knowledge.udacity.com/questions/191147
+    int upTimePid = UpTime() - procRawUpTime / sysconf(_SC_CLK_TCK);
+    return upTimePid;
+  }
+  return 0;
+}
