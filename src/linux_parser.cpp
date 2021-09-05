@@ -96,8 +96,17 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+// [X] TODO: Read and return the system memory utilization
+float LinuxParser::MemoryUtilization() {
+  // based on htop's calulation:
+  // https://stackoverflow.com/questions/41224738/how-to-calculate-system-memory-usage-from-proc-meminfo-like-htop/41251290#41251290
+  float total = stof(LinuxParser::ExtractKeyFromProcFile(
+      kProcDirectory + kMeminfoFilename, "MemTotal:"));
+  float freeMem = stof(LinuxParser::ExtractKeyFromProcFile(
+      kProcDirectory + kMeminfoFilename, "MemFree:"));
+
+  return (total - freeMem) / total;
+}
 
 // [X] TODO: Read and return the system uptime
 long LinuxParser::UpTime() {
